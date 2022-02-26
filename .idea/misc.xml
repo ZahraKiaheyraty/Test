@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/cloud_night_bg.xml" value="0.226" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33229166666666665" />
         <entry key="app/src/main/res/layout/activity_setting.xml" value="0.36886005560704355" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.33229166666666665" />

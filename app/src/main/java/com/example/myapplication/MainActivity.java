@@ -18,16 +18,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        LottieAnimationView animationView = findViewById(R.id.animation_view);
-        animationView
-                .addAnimatorUpdateListener(
-                        (animation) -> {
-                        });
-        animationView
-                .playAnimation();
-
-        if (animationView.isAnimating()) {
-        }
+//        LottieAnimationView animationView = findViewById(R.id.animation_view);
+//        animationView
+//                .addAnimatorUpdateListener(
+//                        (animation) -> {
+//                        });
+//        animationView
+//                .playAnimation();
+//
+//        if (animationView.isAnimating()) {
+//        }
     }
 
     @Override
@@ -47,5 +47,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }
