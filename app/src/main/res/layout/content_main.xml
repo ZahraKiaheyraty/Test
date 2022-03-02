@@ -37,14 +37,27 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="25\u2103"
-        android:textAlignment="center"
+        android:text="22"
+        android:textAlignment="textEnd"
+        android:textColor="@android:color/white"
+        android:textSize="60sp"
+        app:layout_constraintEnd_toStartOf="@id/temp_point"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_icon" />
+
+    <TextView
+        android:id="@+id/temp_point"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="\u2103"
+        android:textAlignment="textStart"
         android:textColor="@android:color/white"
         android:textSize="60sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/text_temperature"
         app:layout_constraintTop_toBottomOf="@+id/image_icon" />
+
 
     <TextView
         android:id="@+id/text_detail"
@@ -191,13 +204,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="10dp"
         android:gravity="center"
         android:text="Wind direction: North"
         android:textAlignment="center"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/windmill2"
         app:layout_constraintTop_toBottomOf="@id/text_wind_speed" />
@@ -210,10 +223,10 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:gravity="center"
-        android:text="Speed: 2330300303030300303sdsaddsdsdddasd"
+        android:text="Speed: 2.3 m/s"
         android:textAlignment="center"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/windmill2"
         app:layout_constraintTop_toBottomOf="@id/text_wind_dir" />

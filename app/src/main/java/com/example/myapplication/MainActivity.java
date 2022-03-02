@@ -6,10 +6,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MainActivity extends AppCompatActivity {
+    TextView temperature;
+    Button btn;
+    Random Number;
+    TextView Speed;
+    int Rnumber;
+    double Dwind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,16 +28,28 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        LottieAnimationView animationView = findViewById(R.id.animation_view);
-//        animationView
-//                .addAnimatorUpdateListener(
-//                        (animation) -> {
-//                        });
-//        animationView
-//                .playAnimation();
-//
-//        if (animationView.isAnimating()) {
-//        }
+        Speed = (TextView)findViewById(R.id.text_wind_spe);
+        temperature = (TextView)findViewById(R.id.text_temperature);
+        btn = (Button)findViewById(R.id.simpleSwitch);
+        btn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                Number = new Random();
+                int Rnumber = ThreadLocalRandom.current().nextInt(10,22);
+                temperature.setText(Integer.toString(Rnumber));
+
+                double Swind = ThreadLocalRandom.current().nextDouble(2,3);
+                //Speed.setText(Double.toString("value of Speed= %.1f",Swind));
+
+
+            }
+        });
+
+
+
+
     }
 
     @Override
@@ -47,6 +69,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 }

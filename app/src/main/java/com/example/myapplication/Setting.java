@@ -146,6 +146,7 @@ public class Setting extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CANCELED) {
             return;
         }
@@ -165,11 +166,11 @@ public class Setting extends AppCompatActivity {
         //Recover connections.
         Map<String, Connection> connections = Connections.getInstance(this).getConnections();
 
-        //Register receivers again
-        for (Connection connection : connections.values()){
-            connection.getClient().registerResources(this);
-            connection.getClient().setCallback(new MqttCallbackHandler(this, connection.getClient().getServerURI()+connection.getClient().getClientId()));
-        }
+//        //Register receivers again
+//        for (Connection connection : connections.values()){
+//            connection.getClient().registerResources(this);
+//            connection.getClient().setCallback(new MqttCallbackHandler(this, connection.getClient().getServerURI()+connection.getClient().getClientId()));
+//        }
     }
 
     @Override

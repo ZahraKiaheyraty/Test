@@ -140,7 +140,7 @@ public class NewConnectionActivity extends AppCompatActivity {
           case R.id.advanced :
             //start the advanced options activity
             dataBundle.setClassName(newConnection,
-                "io.bytehala.eclipsemqtt.sample.AdvancedActivity");
+                "com.example.myapplication.AdvancedActivity");
             newConnection.startActivityForResult(dataBundle,
                     com.example.myapplication.ActivityConstants.advancedConnect);
 
