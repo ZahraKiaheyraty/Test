@@ -4,9 +4,32 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/cloud_night_bg.xml" value="0.226" />
+        <entry key="app/src/main/res/layout/activity_advanced.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/layout/activity_connection_details.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/layout/activity_last_will.xml" value="0.30833333333333335" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/layout/activity_new_connection.xml" value="0.30833333333333335" />
+        <entry key="app/src/main/res/layout/activity_publish.xml" value="0.30833333333333335" />
         <entry key="app/src/main/res/layout/activity_setting.xml" value="0.36886005560704355" />
-        <entry key="app/src/main/res/layout/content_main.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/layout/activity_subscribe.xml" value="0.30833333333333335" />
+        <entry key="app/src/main/res/layout/client_connections.xml" value="0.15625" />
+        <entry key="app/src/main/res/layout/connection_text_view.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/layout/content_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/content_setting.xml" value="0.2972222222222222" />
+        <entry key="app/src/main/res/layout/filedialogitem.xml" value="0.30833333333333335" />
+        <entry key="app/src/main/res/layout/list_view_text_view.xml" value="0.30833333333333335" />
+        <entry key="app/src/main/res/menu/activity_advanced.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/menu/activity_client_connections_contextual.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/menu/activity_connection_details.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/menu/activity_connection_details_disconnected.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/menu/activity_connections.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/menu/activity_connections_logging.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/menu/activity_last_will.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/menu/activity_new_connection.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/menu/activity_publish.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/menu/activity_publish_disconnected.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/menu/activity_subscribe.xml" value="0.33229166666666665" />
+        <entry key="app/src/main/res/menu/activity_subscribe_disconnected.xml" value="0.33229166666666665" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.33229166666666665" />
       </map>
     </option>
