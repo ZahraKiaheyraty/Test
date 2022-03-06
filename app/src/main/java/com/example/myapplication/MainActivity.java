@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 double Dwind = ThreadLocalRandom.current().nextDouble(2, 3);
                                 textViewWind.setText(String.valueOf(Dwind));
+                                textViewWind.setText(new DecimalFormat("##.##").format(Dwind));
                             }
                         });
 
