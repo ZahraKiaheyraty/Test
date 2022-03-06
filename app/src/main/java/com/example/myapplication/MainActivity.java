@@ -21,14 +21,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class MainActivity extends AppCompatActivity {
 
-    int count=0;
-
     Random Number;
-
-
     int Rnumber;
     double Dwind;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
