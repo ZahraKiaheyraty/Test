@@ -1,16 +1,16 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
- *
- * The Eclipse Public License is available at 
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Map;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import com.example.myapplication.Connection.ConnectionStatus;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -30,23 +30,10 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Map;
-
-import com.example.myapplication.Connection.ConnectionStatus;
-
 /**
  * ClientConnections is the main activity for the sample application, it
  * displays all the active connections.
- * 
+ *
  */
 public class ClientConnections extends ListActivity {
 
@@ -76,7 +63,7 @@ public class ClientConnections extends ListActivity {
   private boolean contextualActionBarActive = false;
 
   /**
-   * @see ListActivity#onCreate(Bundle)
+   * @see android.app.ListActivity#onCreate(Bundle)
    */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +73,12 @@ public class ClientConnections extends ListActivity {
     connectionList.setOnItemLongClickListener(new LongClickItemListener());
     connectionList.setTextFilterEnabled(true);
     arrayAdapter = new ArrayAdapter<Connection>(this,
-        R.layout.connection_text_view);
+            R.layout.connection_text_view);
     setListAdapter(arrayAdapter);
 
     // get all the available connections
     Map<String, Connection> connections = Connections.getInstance(this)
-        .getConnections();
+            .getConnections();
 
     if (connections != null) {
       for (String s : connections.keySet())
@@ -104,7 +91,7 @@ public class ClientConnections extends ListActivity {
 
   /**
    * Creates the action bar for the activity
-   * 
+   *
    * @see ListActivity#onCreateOptionsMenu(Menu)
    */
   @Override
@@ -124,14 +111,14 @@ public class ClientConnections extends ListActivity {
     }
 
     menu.findItem(R.id.newConnection).setOnMenuItemClickListener(
-        menuItemClickListener);
+            menuItemClickListener);
 
     return true;
   }
 
   /**
    * Listens for item clicks on the view
-   * 
+   *
    * @param listView
    *            The list view where the click originated from
    * @param view
@@ -141,7 +128,7 @@ public class ClientConnections extends ListActivity {
    */
   @Override
   protected void onListItemClick(ListView listView, View view, int position,
-      long id) {
+                                 long id) {
     super.onListItemClick(listView, view, position, id);
 
     if (!contextualActionBarActive) {
@@ -151,7 +138,7 @@ public class ClientConnections extends ListActivity {
       // selected connection
       Intent intent = new Intent();
       intent.setClassName(getApplicationContext().getPackageName(),
-          "io.bytehala.eclipsemqtt.sample.ConnectionDetailsActivity");
+              "com.example.myapplication.ConnectionDetailsActivity");
       intent.putExtra("handle", c.handle());
       startActivity(intent);
     }
@@ -182,14 +169,14 @@ public class ClientConnections extends ListActivity {
   protected void onResume() {
     super.onResume();
     arrayAdapter.notifyDataSetChanged();
-    
+
     //Recover connections.
     Map<String, Connection> connections = Connections.getInstance(this).getConnections();
-    
+
     //Register receivers again
     for (Connection connection : connections.values()){
       connection.getClient().registerResources(this);
-      connection.getClient().setCallback(new com.example.myapplication.MqttCallbackHandler(this, connection.getClient().getServerURI()+connection.getClient().getClientId()));
+      connection.getClient().setCallback(new MqttCallbackHandler(this, connection.getClient().getServerURI()+connection.getClient().getClientId()));
     }
   }
 
@@ -202,42 +189,42 @@ public class ClientConnections extends ListActivity {
     Map<String, Connection> connections = Connections.getInstance(this).getConnections();
 
     for (Connection connection : connections.values()){
-    	connection.registerChangeListener(changeListener);
-    	connection.getClient().unregisterResources();
+      connection.registerChangeListener(changeListener);
+      connection.getClient().unregisterResources();
     }
     super.onDestroy();
   }
 
   /**
    * Process data from the connect action
-   * 
+   *
    * @param data the {@link Bundle} returned by the {@link NewConnectionActivity} Acitivty
    */
   private void connectAction(Bundle data) {
     MqttConnectOptions conOpt = new MqttConnectOptions();
     /*
      * Mutal Auth connections could do something like this
-     * 
-     * 
+     *
+     *
      * SSLContext context = SSLContext.getDefault();
      * context.init({new CustomX509KeyManager()},null,null); //where CustomX509KeyManager proxies calls to keychain api
      * SSLSocketFactory factory = context.getSSLSocketFactory();
-     * 
+     *
      * MqttConnectOptions options = new MqttConnectOptions();
      * options.setSocketFactory(factory);
-     * 
+     *
      * client.connect(options);
-     * 
+     *
      */
 
     // The basic client information
-    String server = (String) data.get(com.example.myapplication.ActivityConstants.server);
-    String clientId = (String) data.get(com.example.myapplication.ActivityConstants.clientId);
-    int port = Integer.parseInt((String) data.get(com.example.myapplication.ActivityConstants.port));
-    boolean cleanSession = (Boolean) data.get(com.example.myapplication.ActivityConstants.cleanSession);
+    String server = (String) data.get(ActivityConstants.server);
+    String clientId = (String) data.get(ActivityConstants.clientId);
+    int port = Integer.parseInt((String) data.get(ActivityConstants.port));
+    boolean cleanSession = (Boolean) data.get(ActivityConstants.cleanSession);
 
-    boolean ssl = (Boolean) data.get(com.example.myapplication.ActivityConstants.ssl);
-    String ssl_key = (String) data.get(com.example.myapplication.ActivityConstants.ssl_key);
+    boolean ssl = (Boolean) data.get(ActivityConstants.ssl);
+    String ssl_key = (String) data.get(ActivityConstants.ssl_key);
     String uri = null;
     if (ssl) {
       Log.e("SSLConnection", "Doing an SSL Connect");
@@ -252,45 +239,45 @@ public class ClientConnections extends ListActivity {
 
     MqttAndroidClient client;
     client = Connections.getInstance(this).createClient(this, uri, clientId);
-    
+
     if (ssl){
-        try {
-        	if(ssl_key != null && !ssl_key.equalsIgnoreCase(""))
-        	{
-        		FileInputStream key = new FileInputStream(ssl_key);
-        		conOpt.setSocketFactory(client.getSSLSocketFactory(key,
-    					"mqtttest"));
-        	}
-			
-		} catch (MqttSecurityException e) {
-			Log.e(this.getClass().getCanonicalName(),
-		            "MqttException Occured: ", e);
-		} catch (FileNotFoundException e) {
-			Log.e(this.getClass().getCanonicalName(),
-		            "MqttException Occured: SSL Key file not found", e);
-		}
+      try {
+        if(ssl_key != null && !ssl_key.equalsIgnoreCase(""))
+        {
+          FileInputStream key = new FileInputStream(ssl_key);
+          conOpt.setSocketFactory(client.getSSLSocketFactory(key,
+                  "mqtttest"));
+        }
+
+      } catch (MqttSecurityException e) {
+        Log.e(this.getClass().getCanonicalName(),
+                "MqttException Occured: ", e);
+      } catch (FileNotFoundException e) {
+        Log.e(this.getClass().getCanonicalName(),
+                "MqttException Occured: SSL Key file not found", e);
+      }
     }
-    
+
     // create a client handle
     String clientHandle = uri + clientId;
 
     // last will message
-    String message = (String) data.get(com.example.myapplication.ActivityConstants.message);
-    String topic = (String) data.get(com.example.myapplication.ActivityConstants.topic);
-    Integer qos = (Integer) data.get(com.example.myapplication.ActivityConstants.qos);
-    Boolean retained = (Boolean) data.get(com.example.myapplication.ActivityConstants.retained);
+    String message = (String) data.get(ActivityConstants.message);
+    String topic = (String) data.get(ActivityConstants.topic);
+    Integer qos = (Integer) data.get(ActivityConstants.qos);
+    Boolean retained = (Boolean) data.get(ActivityConstants.retained);
 
     // connection options
 
-    String username = (String) data.get(com.example.myapplication.ActivityConstants.username);
+    String username = (String) data.get(ActivityConstants.username);
 
-    String password = (String) data.get(com.example.myapplication.ActivityConstants.password);
+    String password = (String) data.get(ActivityConstants.password);
 
-    int timeout = (Integer) data.get(com.example.myapplication.ActivityConstants.timeout);
-    int keepalive = (Integer) data.get(com.example.myapplication.ActivityConstants.keepalive);
+    int timeout = (Integer) data.get(ActivityConstants.timeout);
+    int keepalive = (Integer) data.get(ActivityConstants.keepalive);
 
     Connection connection = new Connection(clientHandle, clientId, server, port,
-        this, client, ssl);
+            this, client, ssl);
     arrayAdapter.add(connection);
 
     connection.registerChangeListener(changeListener);
@@ -303,37 +290,37 @@ public class ClientConnections extends ListActivity {
     conOpt.setCleanSession(cleanSession);
     conOpt.setConnectionTimeout(timeout);
     conOpt.setKeepAliveInterval(keepalive);
-    if (!username.equals(com.example.myapplication.ActivityConstants.empty)) {
+    if (!username.equals(ActivityConstants.empty)) {
       conOpt.setUserName(username);
     }
-    if (!password.equals(com.example.myapplication.ActivityConstants.empty)) {
+    if (!password.equals(ActivityConstants.empty)) {
       conOpt.setPassword(password.toCharArray());
     }
 
     final ActionListener callback = new ActionListener(this,
-        ActionListener.Action.CONNECT, clientHandle, actionArgs);
+            ActionListener.Action.CONNECT, clientHandle, actionArgs);
 
     boolean doConnect = true;
 
-    if ((!message.equals(com.example.myapplication.ActivityConstants.empty))
-        || (!topic.equals(com.example.myapplication.ActivityConstants.empty))) {
+    if ((!message.equals(ActivityConstants.empty))
+            || (!topic.equals(ActivityConstants.empty))) {
       // need to make a message since last will is set
       try {
         conOpt.setWill(topic, message.getBytes(), qos.intValue(),
-            retained.booleanValue());
+                retained.booleanValue());
       }
       catch (Exception e) {
-    	Log.e(this.getClass().getCanonicalName(), "Exception Occured", e);
+        Log.e(this.getClass().getCanonicalName(), "Exception Occured", e);
         doConnect = false;
         callback.onFailure(null, e);
       }
     }
-    client.setCallback(new com.example.myapplication.MqttCallbackHandler(this, clientHandle));
-    
-   
+    client.setCallback(new MqttCallbackHandler(this, clientHandle));
+
+
     //set traceCallback
-    client.setTraceCallback(new com.example.myapplication.MqttTraceCallback());
-    
+    client.setTraceCallback(new MqttTraceCallback());
+
     connection.addConnectionOptions(conOpt);
     Connections.getInstance(this).addConnection(connection);
     if (doConnect) {
@@ -342,7 +329,7 @@ public class ClientConnections extends ListActivity {
       }
       catch (MqttException e) {
         Log.e(this.getClass().getCanonicalName(),
-            "MqttException Occured", e);
+                "MqttException Occured", e);
       }
     }
 
@@ -431,16 +418,16 @@ public class ClientConnections extends ListActivity {
         //display a dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(clientConnections);
         builder.setTitle(R.string.disconnectClient)
-            .setMessage(getString(R.string.deleteDialog))
-            .setNegativeButton(R.string.cancelBtn, new OnClickListener() {
+                .setMessage(getString(R.string.deleteDialog))
+                .setNegativeButton(R.string.cancelBtn, new OnClickListener() {
 
-              @Override
-              public void onClick(DialogInterface arg0, int arg1) {
-                //do nothing user cancelled action
-              }
-            })
-            .setPositiveButton(R.string.continueBtn, this)
-            .show();
+                  @Override
+                  public void onClick(DialogInterface arg0, int arg1) {
+                    //do nothing user cancelled action
+                  }
+                })
+                .setPositiveButton(R.string.continueBtn, this)
+                .show();
       }
       else {
         arrayAdapter.remove(connection);
@@ -472,12 +459,12 @@ public class ClientConnections extends ListActivity {
   private class ChangeListener implements PropertyChangeListener {
 
     /**
-     * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     @Override
     public void propertyChange(PropertyChangeEvent event) {
 
-      if (!event.getPropertyName().equals(com.example.myapplication.ActivityConstants.ConnectionStatusProperty)) {
+      if (!event.getPropertyName().equals(ActivityConstants.ConnectionStatusProperty)) {
         return;
       }
       clientConnections.runOnUiThread(new Runnable() {
@@ -488,8 +475,6 @@ public class ClientConnections extends ListActivity {
         }
 
       });
-
     }
-
   }
 }

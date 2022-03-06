@@ -1,32 +1,19 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
- *
- * The Eclipse Public License is available at 
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
-
-import android.content.Context;
-import android.text.Html;
-import android.text.Spanned;
-
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import com.example.myapplication.R;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import android.content.Context;
+import android.text.Html;
+import android.text.Spanned;
+import org.eclipse.paho.android.service.MqttAndroidClient;
 
 /**
- * 
+ *
  * Represents a {@link MqttAndroidClient} and the actions it has performed
  *
  */
@@ -62,7 +49,7 @@ public class Connection {
   /** True if this connection is secured using SSL **/
   private boolean sslConnection = false;
 
-  /** Persistence id, used by {@link com.example.myapplication.Persistence} **/
+  /** Persistence id, used by {@link Persistence} **/
   private long persistenceId = -1;
 
   /**
@@ -95,7 +82,7 @@ public class Connection {
    * @return a new instance of <code>Connection</code>
    */
   public static Connection createConnection(String clientId, String host,
-      int port, Context context, boolean sslConnection) {
+                                            int port, Context context, boolean sslConnection) {
     String handle = null;
     String uri = null;
     if (sslConnection) {
@@ -123,7 +110,7 @@ public class Connection {
    * @param sslConnection true if the connection is secured by SSL
    */
   public Connection(String clientHandle, String clientId, String host,
-      int port, Context context, MqttAndroidClient client, boolean sslConnection) {
+                    int port, Context context, MqttAndroidClient client, boolean sslConnection) {
     //generate the client handle from its hash code
     this.clientHandle = clientHandle;
     this.clientId = clientId;
@@ -153,13 +140,13 @@ public class Connection {
     String timestamp = context.getString(R.string.timestamp, args);
     history.add(action + timestamp);
 
-    notifyListeners(new PropertyChangeEvent(this, com.example.myapplication.ActivityConstants.historyProperty, null, null));
+    notifyListeners(new PropertyChangeEvent(this, ActivityConstants.historyProperty, null, null));
   }
 
   /**
    * Generate an array of Spanned items representing the history of this
-   * connection. 
-   * 
+   * connection.
+   *
    * @return an array of history entries
    */
   public Spanned[] history() {
@@ -200,14 +187,14 @@ public class Connection {
    */
   public void changeConnectionStatus(ConnectionStatus connectionStatus) {
     status = connectionStatus;
-    notifyListeners((new PropertyChangeEvent(this, com.example.myapplication.ActivityConstants.ConnectionStatusProperty, null, null)));
+    notifyListeners((new PropertyChangeEvent(this, ActivityConstants.ConnectionStatusProperty, null, null)));
   }
 
   /**
    * A string representing the state of the client this connection
    * object represents
-   * 
-   * 
+   *
+   *
    * @return A string representing the state of the client
    */
   @Override
@@ -350,7 +337,7 @@ public class Connection {
 
   /**
    * Notify {@link PropertyChangeListener} objects that the object has been updated
-   * @param propertyChangeEvent 
+   * @param propertyChangeEvent
    */
   private void notifyListeners(PropertyChangeEvent propertyChangeEvent)
   {

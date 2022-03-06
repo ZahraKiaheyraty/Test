@@ -1,17 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
- *
- * The Eclipse Public License is available at 
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,13 +19,6 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 /**
  * Add SSL key file selector
  * @author foxxiang
@@ -39,7 +26,7 @@ import java.util.Map;
  */
 public class OpenFileDialog {
 	public static String tag = "OpenFileDialog";
-	static final public String sRoot = "/"; 
+	static final public String sRoot = "/";
 	static final public String sParent = "..";
 	static final public String sFolder = ".";
 	static final public String sEmpty = "";
@@ -66,14 +53,14 @@ public class OpenFileDialog {
 
 	/** The FileSelect View with OnItemClick Listener*/
 	static class FileSelectView extends ListView implements OnItemClickListener{
-				
+
 		private CallbackBundle callback = null;
 		private String path = sRoot;
 		private List<Map<String, Object>> list = null;
 		private int dialogid = 0;
-		
+
 		private String suffix = null;
-		
+
 		private Map<String, Integer> imagemap = null;
 
 		/**
@@ -108,7 +95,7 @@ public class OpenFileDialog {
 				return filename.substring(dix+1);
 			}
 		}
-		
+
 		/**
 		 * Get The Image resource ID
 		 * @param s
@@ -151,24 +138,24 @@ public class OpenFileDialog {
 			else{
 				list = new ArrayList<Map<String, Object>>(files.length);
 			}
-			
+
 			ArrayList<Map<String, Object>> lfolders = new ArrayList<Map<String, Object>>();
 			ArrayList<Map<String, Object>> lfiles = new ArrayList<Map<String, Object>>();
-			
+
 			if(!this.path.equals(sRoot)){
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("name", sRoot);
 				map.put("path", sRoot);
 				map.put("img", getImageId(sRoot));
 				list.add(map);
-				
+
 				map = new HashMap<String, Object>();
 				map.put("name", sParent);
 				map.put("path", path);
 				map.put("img", getImageId(sParent));
 				list.add(map);
 			}
-			
+
 			for(File file: files)
 			{
 				if(file.isDirectory() && file.listFiles()!=null){
@@ -187,13 +174,13 @@ public class OpenFileDialog {
 						map.put("img", getImageId(sf));
 						lfiles.add(map);
 					}
-				}  
+				}
 			}
-			
-			list.addAll(lfolders); 
+
+			list.addAll(lfolders);
 			list.addAll(lfiles);
-			
-			
+
+
 			SimpleAdapter adapter = new SimpleAdapter(getContext(), list, R.layout.filedialogitem, new String[]{"img", "name", "path"}, new int[]{R.id.filedialogitem_img, R.id.filedialogitem_name, R.id.filedialogitem_path});
 			this.setAdapter(adapter);
 			return files.length;
@@ -201,7 +188,7 @@ public class OpenFileDialog {
 
 		/**
 		 * OnItemClick action
-		 * 
+		 *
 		 * @see ListView#onItemClick(AdapterView<?> parent, View v, int position, long id)
 		 */
 		@SuppressWarnings("deprecation")
@@ -223,7 +210,7 @@ public class OpenFileDialog {
 				File fl = new File(pt);
 				if(fl.isFile()){
 					((Activity)getContext()).dismissDialog(this.dialogid);
-					
+
 					Bundle bundle = new Bundle();
 					bundle.putString("path", pt);
 					bundle.putString("name", fn);

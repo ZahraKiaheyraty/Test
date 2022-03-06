@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,8 +24,15 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MainActivity extends AppCompatActivity {
 
     Random Number;
+    Button btn;
+    TextView temperature;
+    TextView Speed;
     int Rnumber;
     double Dwind;
+    String SDirection[] = {"Wind direction: North", "Wind direction: West", "Wind direction: N/W", "Wind direction: South", "Wind direction: N/S"};
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +41,33 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TextView textView = (TextView) findViewById(R.id.text_temperature);
+        TextView textViewTemp = (TextView) findViewById(R.id.text_temperature);
         TextView textViewWind = (TextView) findViewById(R.id.text_wind_spe);
+        TextView textViewWindDirection = (TextView) findViewById(R.id.text_wind_dir);
+
+        btn = (Button) findViewById(R.id.simpleSwitch);
+        Speed = (TextView) findViewById(R.id.text_wind_spe);
+        temperature = (TextView) findViewById(R.id.text_temperature);
+
+
+
+
+
+
+
+
+        btn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+
+
+            }
+        });
+
 
         Thread t = new Thread() {
-
 
             @Override
             public void run() {
@@ -52,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                             public void run() {
                                 Number = new Random();
                                 int Rnumber = ThreadLocalRandom.current().nextInt(10, 22);
-                                textView.setText(String.valueOf(Rnumber));
+                                textViewTemp.setText(String.valueOf(Rnumber));
 
                                 double Dwind = ThreadLocalRandom.current().nextDouble(2, 3);
                                 textViewWind.setText(String.valueOf(Dwind));
@@ -64,6 +95,23 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                    try {
+                        Thread.sleep(1000);  //1000ms = 1 sec
+
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                Random RDirection = new Random();
+                                int index = RDirection.nextInt(SDirection.length - 0) + 0;
+                                textViewWindDirection.setText(SDirection[index]);
+
+                            }
+                        });
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -71,11 +119,6 @@ public class MainActivity extends AppCompatActivity {
         t.start();
 
     }
-
-
-
-
-
 
 
 //    Timer timeoutTimer;

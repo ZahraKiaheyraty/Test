@@ -1,17 +1,7 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
- *
- * The Eclipse Public License is available at 
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
 
+import java.util.Calendar;
+import com.example.myapplication.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -20,8 +10,6 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
-
-import java.util.Calendar;
 
 /**
  * Provides static methods for creating and showing notifications to the user.
@@ -57,17 +45,17 @@ public class Notify {
 
     //build the pending intent that will start the appropriate activity
     PendingIntent pendingIntent = PendingIntent.getActivity(context,
-            com.example.myapplication.ActivityConstants.showHistory, intent, 0);
+            ActivityConstants.showHistory, intent, 0);
 
     //build the notification
     NotificationCompat.Builder notificationCompat = new NotificationCompat.Builder(context);
     notificationCompat.setAutoCancel(true)
-        .setContentTitle(contentTitle)
-        .setContentIntent(pendingIntent)
-        .setContentText(messageString)
-        .setTicker(ticker)
-        .setWhen(when)
-        .setSmallIcon(R.mipmap.ic_launcher);
+            .setContentTitle(contentTitle)
+            .setContentIntent(pendingIntent)
+            .setContentText(messageString)
+            .setTicker(ticker)
+            .setWhen(when)
+            .setSmallIcon(R.mipmap.ic_launcher);
 
     Notification notification = notificationCompat.build();
     //display the notification
@@ -86,5 +74,4 @@ public class Notify {
     Toast toast = Toast.makeText(context, text, duration);
     toast.show();
   }
-
 }

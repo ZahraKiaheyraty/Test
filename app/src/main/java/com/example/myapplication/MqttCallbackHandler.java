@@ -1,25 +1,13 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
- *
- * The Eclipse Public License is available at 
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-
+import com.example.myapplication.R;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import com.example.myapplication.Connection.ConnectionStatus;
 
 /**
@@ -45,7 +33,7 @@ public class MqttCallbackHandler implements MqttCallback {
   }
 
   /**
-   * @see MqttCallback#connectionLost(Throwable)
+   * @see org.eclipse.paho.client.mqttv3.MqttCallback#connectionLost(java.lang.Throwable)
    */
   @Override
   public void connectionLost(Throwable cause) {
@@ -64,7 +52,7 @@ public class MqttCallbackHandler implements MqttCallback {
 
       //build intent
       Intent intent = new Intent();
-      intent.setClassName(context, "io.bytehala.eclipsemqtt.sample.ConnectionDetailsActivity");
+      intent.setClassName(context, "com.example.myapplication.ConnectionDetailsActivity");
       intent.putExtra("handle", clientHandle);
 
       //notify the user
@@ -73,7 +61,7 @@ public class MqttCallbackHandler implements MqttCallback {
   }
 
   /**
-   * @see MqttCallback#messageArrived(String, MqttMessage)
+   * @see org.eclipse.paho.client.mqttv3.MqttCallback#messageArrived(java.lang.String, org.eclipse.paho.client.mqttv3.MqttMessage)
    */
   @Override
   public void messageArrived(String topic, MqttMessage message) throws Exception {
@@ -91,7 +79,7 @@ public class MqttCallbackHandler implements MqttCallback {
 
     //create intent to start activity
     Intent intent = new Intent();
-    intent.setClassName(context, "io.bytehala.eclipsemqtt.sample.ConnectionDetailsActivity");
+    intent.setClassName(context, "com.example.myapplication.ConnectionDetailsActivity");
     intent.putExtra("handle", clientHandle);
 
     //format string args
@@ -100,7 +88,7 @@ public class MqttCallbackHandler implements MqttCallback {
     notifyArgs[1] = new String(message.getPayload());
     notifyArgs[2] = topic;
 
-    //notify the user 
+    //notify the user
     Notify.notifcation(context, context.getString(R.string.notification, notifyArgs), intent, R.string.notifyTitle);
 
     //update client history
@@ -109,11 +97,10 @@ public class MqttCallbackHandler implements MqttCallback {
   }
 
   /**
-   * @see MqttCallback#deliveryComplete(IMqttDeliveryToken)
+   * @see org.eclipse.paho.client.mqttv3.MqttCallback#deliveryComplete(org.eclipse.paho.client.mqttv3.IMqttDeliveryToken)
    */
   @Override
   public void deliveryComplete(IMqttDeliveryToken token) {
     // Do nothing
   }
-
 }

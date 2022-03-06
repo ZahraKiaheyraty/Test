@@ -1,15 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
- *
- * The Eclipse Public License is available at 
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
 
 import android.annotation.SuppressLint;
@@ -45,8 +33,8 @@ public class NewConnectionActivity extends AppCompatActivity {
   /** {@link Bundle} which holds data from activities launched from this activity **/
   private Bundle result = null;
 
-  /** 
-   * @see android.app.Activity#onCreate(Bundle)
+  /**
+   * @see android.app.Activity#onCreate(android.os.Bundle)
    */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +53,8 @@ public class NewConnectionActivity extends AppCompatActivity {
 
   }
 
-  /** 
-   * @see android.app.Activity#onCreateOptionsMenu(Menu)
+  /**
+   * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
    */
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -78,8 +66,8 @@ public class NewConnectionActivity extends AppCompatActivity {
     return true;
   }
 
-  /** 
-   * @see android.app.Activity#onOptionsItemSelected(MenuItem)
+  /**
+   * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
    */
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -92,12 +80,12 @@ public class NewConnectionActivity extends AppCompatActivity {
   }
 
   /**
-   * @see android.app.Activity#onActivityResult(int, int, Intent)
+   * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
    */
   @SuppressLint("MissingSuperCall")
   @Override
   protected void onActivityResult(int requestCode, int resultCode,
-      Intent intent) {
+                                  Intent intent) {
 
     if (resultCode == RESULT_CANCELED) {
       return;
@@ -113,7 +101,7 @@ public class NewConnectionActivity extends AppCompatActivity {
    */
   private class Listener implements OnMenuItemClickListener {
 
-    //used for starting activities 
+    //used for starting activities
     private NewConnectionActivity newConnection = null;
 
     public Listener(NewConnectionActivity newConnection)
@@ -122,7 +110,7 @@ public class NewConnectionActivity extends AppCompatActivity {
     }
 
     /**
-     * @see OnMenuItemClickListener#onMenuItemClick(MenuItem)
+     * @see android.view.MenuItem.OnMenuItemClickListener#onMenuItemClick(android.view.MenuItem)
      */
     @Override
     public boolean onMenuItemClick(MenuItem item) {
@@ -140,9 +128,9 @@ public class NewConnectionActivity extends AppCompatActivity {
           case R.id.advanced :
             //start the advanced options activity
             dataBundle.setClassName(newConnection,
-                "com.example.myapplication.AdvancedActivity");
+                    "com.example.myapplication.AdvancedActivity");
             newConnection.startActivityForResult(dataBundle,
-                    com.example.myapplication.ActivityConstants.advancedConnect);
+                    ActivityConstants.advancedConnect);
 
             break;
         }
@@ -154,7 +142,7 @@ public class NewConnectionActivity extends AppCompatActivity {
 
     /**
      * Add a server URI to the persisted file
-     * 
+     *
      * @param serverURI the uri to store
      */
     private void persistServerURI(String serverURI) {
@@ -195,10 +183,10 @@ public class NewConnectionActivity extends AppCompatActivity {
     String clientId = ((EditText) findViewById(R.id.clientId))
             .getText().toString();
 
-    if (server.equals(com.example.myapplication.ActivityConstants.empty) || port.equals(com.example.myapplication.ActivityConstants.empty) || clientId.equals(com.example.myapplication.ActivityConstants.empty))
+    if (server.equals(ActivityConstants.empty) || port.equals(ActivityConstants.empty) || clientId.equals(ActivityConstants.empty))
     {
       String notificationText = this.getString(R.string.missingOptions);
-      com.example.myapplication.Notify.toast(this, notificationText, Toast.LENGTH_LONG);
+      Notify.toast(this, notificationText, Toast.LENGTH_LONG);
 //      return false;
     }
 
@@ -207,34 +195,34 @@ public class NewConnectionActivity extends AppCompatActivity {
     persistServerURI(server);
 
     //put data into a bundle to be passed back to ClientConnections
-    dataBundle.putExtra(com.example.myapplication.ActivityConstants.server, server);
-    dataBundle.putExtra(com.example.myapplication.ActivityConstants.port, port);
-    dataBundle.putExtra(com.example.myapplication.ActivityConstants.clientId, clientId);
-    dataBundle.putExtra(com.example.myapplication.ActivityConstants.action, com.example.myapplication.ActivityConstants.connect);
-    dataBundle.putExtra(com.example.myapplication.ActivityConstants.cleanSession, cleanSession);
+    dataBundle.putExtra(ActivityConstants.server, server);
+    dataBundle.putExtra(ActivityConstants.port, port);
+    dataBundle.putExtra(ActivityConstants.clientId, clientId);
+    dataBundle.putExtra(ActivityConstants.action, ActivityConstants.connect);
+    dataBundle.putExtra(ActivityConstants.cleanSession, cleanSession);
 
     if (result == null) {
       // create a new bundle and put default advanced options into a bundle
       result = new Bundle();
 
-      result.putString(com.example.myapplication.ActivityConstants.message,
-              com.example.myapplication.ActivityConstants.empty);
-      result.putString(com.example.myapplication.ActivityConstants.topic, com.example.myapplication.ActivityConstants.empty);
-      result.putInt(com.example.myapplication.ActivityConstants.qos, com.example.myapplication.ActivityConstants.defaultQos);
-      result.putBoolean(com.example.myapplication.ActivityConstants.retained,
-              com.example.myapplication.ActivityConstants.defaultRetained);
+      result.putString(ActivityConstants.message,
+              ActivityConstants.empty);
+      result.putString(ActivityConstants.topic, ActivityConstants.empty);
+      result.putInt(ActivityConstants.qos, ActivityConstants.defaultQos);
+      result.putBoolean(ActivityConstants.retained,
+              ActivityConstants.defaultRetained);
 
-      result.putString(com.example.myapplication.ActivityConstants.username,
-              com.example.myapplication.ActivityConstants.empty);
-      result.putString(com.example.myapplication.ActivityConstants.password,
-              com.example.myapplication.ActivityConstants.empty);
+      result.putString(ActivityConstants.username,
+              ActivityConstants.empty);
+      result.putString(ActivityConstants.password,
+              ActivityConstants.empty);
 
-      result.putInt(com.example.myapplication.ActivityConstants.timeout,
-              com.example.myapplication.ActivityConstants.defaultTimeOut);
-      result.putInt(com.example.myapplication.ActivityConstants.keepalive,
-              com.example.myapplication.ActivityConstants.defaultKeepAlive);
-      result.putBoolean(com.example.myapplication.ActivityConstants.ssl,
-              com.example.myapplication.ActivityConstants.defaultSsl);
+      result.putInt(ActivityConstants.timeout,
+              ActivityConstants.defaultTimeOut);
+      result.putInt(ActivityConstants.keepalive,
+              ActivityConstants.defaultKeepAlive);
+      result.putBoolean(ActivityConstants.ssl,
+              ActivityConstants.defaultSsl);
 
     }
     //add result bundle to the data being returned to ClientConnections

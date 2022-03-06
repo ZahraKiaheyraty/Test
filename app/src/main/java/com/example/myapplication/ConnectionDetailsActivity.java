@@ -1,16 +1,9 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
- *
- * The Eclipse Public License is available at 
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+
 
 import android.os.Bundle;
 import android.util.Log;
@@ -30,24 +23,20 @@ import androidx.viewpager.widget.ViewPager;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-
 /**
  * The connection details activity operates the fragments that make up the
  * connection details screen.
  * <p>
  * The fragments which this FragmentActivity uses are
  * <ul>
- * <li>{@link com.example.myapplication.HistoryFragment}
+ * <li>{@link HistoryFragment}
  * <li>{@link PublishFragment}
  * <li>{@link SubscribeFragment}
  * </ul>
- * 
+ *
  */
 public class ConnectionDetailsActivity extends AppCompatActivity implements
-    ActionBar.TabListener {
+        ActionBar.TabListener {
 
   /**
    * {@link SectionsPagerAdapter} that is used to get pages to display
@@ -82,9 +71,9 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
    **/
   private ChangeListener changeListener = null;
 
-//  /**
-//   * @see android.support.v4.app.FragmentActivity#onCreate(Bundle)
-//   */
+  /**
+   * @see android.support.v4.app.FragmentActivity#onCreate(android.os.Bundle)
+   */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -94,7 +83,7 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
     setContentView(R.layout.activity_connection_details);
     // Create the adapter that will return a fragment for each of the pages
     sectionsPagerAdapter = new SectionsPagerAdapter(
-        getSupportFragmentManager());
+            getSupportFragmentManager());
 
     // Set up the action bar for tab navigation
     final ActionBar actionBar = getSupportActionBar();
@@ -105,15 +94,15 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
     viewPager.setAdapter(sectionsPagerAdapter);
 
     viewPager
-        .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 
-          @Override
-          public void onPageSelected(int position) {
-            // select the tab that represents the current page
-            actionBar.setSelectedNavigationItem(position);
+              @Override
+              public void onPageSelected(int position) {
+                // select the tab that represents the current page
+                actionBar.setSelectedNavigationItem(position);
 
-          }
-        });
+              }
+            });
 
     // Create the tabs for the screen
     for (int i = 0; i < sectionsPagerAdapter.getCount(); i++) {
@@ -135,14 +124,14 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
   }
 
   /**
-   * @see android.app.Activity#onCreateOptionsMenu(Menu)
+   * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
    */
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     int menuID;
     Integer button = null;
     boolean connected = Connections.getInstance(this)
-        .getConnection(clientHandle).isConnected();
+            .getConnection(clientHandle).isConnected();
 
     // Select the correct action bar menu to display based on the
     // connectionStatus and which tab is selected
@@ -191,7 +180,7 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
       // add listeners
       menu.findItem(button).setOnMenuItemClickListener(listener);
       if (!Connections.getInstance(this).getConnection(clientHandle)
-          .isConnected()) {
+              .isConnected()) {
         menu.findItem(button).setEnabled(false);
       }
     }
@@ -201,7 +190,7 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
     }
     else {
       menu.findItem(R.id.connectMenuOption).setOnMenuItemClickListener(
-          listener);
+              listener);
     }
 
     return true;
@@ -213,7 +202,7 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
    */
   @Override
   public void onTabUnselected(ActionBar.Tab tab,
-      FragmentTransaction fragmentTransaction) {
+                              FragmentTransaction fragmentTransaction) {
     // Don't need to do anything when a tab is unselected
   }
 
@@ -223,7 +212,7 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
    */
   @Override
   public void onTabSelected(ActionBar.Tab tab,
-      FragmentTransaction fragmentTransaction) {
+                            FragmentTransaction fragmentTransaction) {
     // When the given tab is selected, switch to the corresponding page in
     // the ViewPager.
     viewPager.setCurrentItem(tab.getPosition());
@@ -236,7 +225,7 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
 
     // history fragment is at position zero so get this then refresh its
     // view
-    ((com.example.myapplication.HistoryFragment) sectionsPagerAdapter.getItem(0)).refresh();
+    ((HistoryFragment) sectionsPagerAdapter.getItem(0)).refresh();
   }
 
   /**
@@ -245,13 +234,13 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
    */
   @Override
   public void onTabReselected(ActionBar.Tab tab,
-      FragmentTransaction fragmentTransaction) {
+                              FragmentTransaction fragmentTransaction) {
     // Don't need to do anything when the tab is reselected
   }
 
   /**
    * Provides the Activity with the pages to display for each tab
-   * 
+   *
    */
   public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -260,7 +249,7 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
 
     /**
      * Only Constructor, requires a the activity's fragment managers
-     * 
+     *
      * @param fragmentManager
      */
     public SectionsPagerAdapter(FragmentManager fragmentManager) {
@@ -279,20 +268,24 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
 
     }
 
-
+    /**
+     * @see android.support.v4.app.FragmentPagerAdapter#getItem(int)
+     */
     @Override
     public Fragment getItem(int position) {
       return fragments.get(position);
     }
 
-
+    /**
+     * @see android.support.v4.view.PagerAdapter#getCount()
+     */
     @Override
     public int getCount() {
       return fragments.size();
     }
 
     /**
-     * 
+     *
      * @see FragmentPagerAdapter#getPageTitle(int)
      */
     @Override
@@ -309,19 +302,17 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
       return null;
     }
 
-    private class HistoryFragment extends Fragment {
-    }
   }
 
   /**
    * <code>ChangeListener</code> updates the UI when the {@link Connection}
    * object it is associated with updates
-   * 
+   *
    */
   private class ChangeListener implements PropertyChangeListener {
 
     /**
-     * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     @Override
     public void propertyChange(PropertyChangeEvent event) {
@@ -332,8 +323,8 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
         @Override
         public void run() {
           connectionDetails.invalidateOptionsMenu();
-          ((com.example.myapplication.HistoryFragment) connectionDetails.sectionsPagerAdapter
-              .getItem(0)).refresh();
+          ((HistoryFragment) connectionDetails.sectionsPagerAdapter
+                  .getItem(0)).refresh();
 
           updateButtons();
 
@@ -371,7 +362,7 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
 
     RadioGroup radio = (RadioGroup) connectionDetails.findViewById(R.id.qosSubRadio);
     int checked = radio.getCheckedRadioButtonId();
-    int qos = com.example.myapplication.ActivityConstants.defaultQos;
+    int qos = ActivityConstants.defaultQos;
 
     switch (checked) {
       case R.id.qos0 :
@@ -416,7 +407,7 @@ public class ConnectionDetailsActivity extends AppCompatActivity implements
 
     RadioGroup radio = (RadioGroup) connectionDetails.findViewById(R.id.qosRadio);
     int checked = radio.getCheckedRadioButtonId();
-    int qos = com.example.myapplication.ActivityConstants.defaultQos;
+    int qos = ActivityConstants.defaultQos;
 
     switch (checked) {
       case R.id.qos0 :

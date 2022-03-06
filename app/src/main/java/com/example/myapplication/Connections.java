@@ -1,24 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
- *
- * The Eclipse Public License is available at 
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
-
-import android.content.Context;
-
-import org.eclipse.paho.android.service.MqttAndroidClient;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import android.content.Context;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
 
 /**
  * <code>Connections</code> is a singleton class which stores all the connection objects
@@ -34,8 +22,8 @@ public class Connections {
   /** List of {@link Connection} objects**/
   private HashMap<String, Connection> connections = null;
 
-  /** {@link com.example.myapplication.Persistence} object used to save, delete and restore connections**/
-  private com.example.myapplication.Persistence persistence = null;
+  /** {@link Persistence} object used to save, delete and restore connections**/
+  private Persistence persistence = null;
 
   /**
    * Create a Connections object
@@ -46,14 +34,14 @@ public class Connections {
     connections = new HashMap<String, Connection>();
 
     //attempt to restore state
-    persistence = new com.example.myapplication.Persistence(context);
+    persistence = new Persistence(context);
     try {
       List<Connection> l = persistence.restoreConnections(context);
       for (Connection c : l) {
         connections.put(c.handle(), c);
       }
     }
-    catch (com.example.myapplication.PersistenceException e) {
+    catch (PersistenceException e) {
       e.printStackTrace();
     }
 
@@ -95,7 +83,7 @@ public class Connections {
     try {
       persistence.persistConnection(connection);
     }
-    catch (com.example.myapplication.PersistenceException e)
+    catch (PersistenceException e)
     {
       //error persisting well lets just swallow this
       e.printStackTrace();
@@ -134,3 +122,4 @@ public class Connections {
   }
 
 }
+

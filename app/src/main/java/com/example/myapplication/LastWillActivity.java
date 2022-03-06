@@ -1,15 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution.
- *
- * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
 
 import android.app.Activity;
@@ -64,7 +52,7 @@ public class LastWillActivity extends AppCompatActivity {
 
         RadioGroup radio = (RadioGroup) findViewById(R.id.qosRadio);
         int checked = radio.getCheckedRadioButtonId();
-        int qos = com.example.myapplication.ActivityConstants.defaultQos;
+        int qos = ActivityConstants.defaultQos;
 
         //determine which qos value has been selected
         switch (checked)
@@ -83,10 +71,10 @@ public class LastWillActivity extends AppCompatActivity {
         boolean retained = ((CheckBox) findViewById(R.id.retained)).isChecked();
 
         //package the data collected into the intent
-        result.putExtra(com.example.myapplication.ActivityConstants.message, message);
-        result.putExtra(com.example.myapplication.ActivityConstants.topic, topic);
-        result.putExtra(com.example.myapplication.ActivityConstants.qos, qos);
-        result.putExtra(com.example.myapplication.ActivityConstants.retained, retained);
+        result.putExtra(ActivityConstants.message, message);
+        result.putExtra(ActivityConstants.topic, topic);
+        result.putExtra(ActivityConstants.qos, qos);
+        result.putExtra(ActivityConstants.retained, retained);
 
         //set the result and finish activity
         last.setResult(RESULT_OK, result);
@@ -94,9 +82,7 @@ public class LastWillActivity extends AppCompatActivity {
 
         return false;
       }
-
     });
     return true;
   }
-
 }

@@ -1,16 +1,13 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
- *
- * The Eclipse Public License is available at 
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.logging.LogManager;
+
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,32 +19,23 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.logging.LogManager;
-
 import com.example.myapplication.ActionListener.Action;
 import com.example.myapplication.Connection.ConnectionStatus;
+import org.eclipse.paho.android.service.MqttAndroidClient;
 
 /**
- * Deals with actions performed in the {@link com.example.myapplication.ClientConnections} activity
- * and the {@link com.example.myapplication.ConnectionDetailsActivity} activity and associated fragments
+ * Deals with actions performed in the {@link ClientConnections} activity
+ * and the {@link ConnectionDetailsActivity} activity and associated fragments
  *
  */
 public class Listener implements OnMenuItemClickListener {
 
-  /** The handle to a {@link com.example.myapplication.Connection} object which contains the {@link MqttAndroidClient} associated with this object **/
+  /** The handle to a {@link Connection} object which contains the {@link MqttAndroidClient} associated with this object **/
   private String clientHandle = null;
 
-  /** {@link com.example.myapplication.ConnectionDetailsActivity} reference used to perform some actions**/
-  private com.example.myapplication.ConnectionDetailsActivity connectionDetails = null;
-  /** {@link com.example.myapplication.ClientConnections} reference used to perform some actions**/
+  /** {@link ConnectionDetailsActivity} reference used to perform some actions**/
+  private ConnectionDetailsActivity connectionDetails = null;
+  /** {@link ClientConnections} reference used to perform some actions**/
   private Activity clientConnections = null;
   /** {@link Context} used to load and format strings **/
   private Context context = null;
@@ -56,12 +44,12 @@ public class Listener implements OnMenuItemClickListener {
   static boolean logging = false;
 
   /**
-   * Constructs a listener object for use with {@link com.example.myapplication.ConnectionDetailsActivity} activity and
+   * Constructs a listener object for use with {@link ConnectionDetailsActivity} activity and
    * associated fragments.
-   * @param connectionDetails The instance of {@link com.example.myapplication.ConnectionDetailsActivity}
+   * @param connectionDetails The instance of {@link ConnectionDetailsActivity}
    * @param clientHandle The handle to the client that the actions are to be performed on
    */
-  public Listener(com.example.myapplication.ConnectionDetailsActivity connectionDetails, String clientHandle)
+  public Listener(ConnectionDetailsActivity connectionDetails, String clientHandle)
   {
     this.connectionDetails = connectionDetails;
     this.clientHandle = clientHandle;
@@ -70,8 +58,8 @@ public class Listener implements OnMenuItemClickListener {
   }
 
   /**
-   * Constructs a listener object for use with {@link com.example.myapplication.ClientConnections} activity.
-   * @param clientConnections The instance of {@link com.example.myapplication.ClientConnections}
+   * Constructs a listener object for use with {@link ClientConnections} activity.
+   * @param clientConnections The instance of {@link ClientConnections}
    */
   public Listener(Activity clientConnections) {
     this.clientConnections = clientConnections;
@@ -81,10 +69,10 @@ public class Listener implements OnMenuItemClickListener {
   /**
    * Perform the needed action required based on the button that
    * the user has clicked.
-   * 
+   *
    * @param item The menu item that was clicked
    * @return If there is anymore processing to be done
-   * 
+   *
    */
   @Override
   public boolean onMenuItemClick(MenuItem item) {
@@ -124,11 +112,11 @@ public class Listener implements OnMenuItemClickListener {
    */
   private void reconnect() {
 
-    com.example.myapplication.Connections.getInstance(context).getConnection(clientHandle).changeConnectionStatus(ConnectionStatus.CONNECTING);
+    Connections.getInstance(context).getConnection(clientHandle).changeConnectionStatus(ConnectionStatus.CONNECTING);
 
-    com.example.myapplication.Connection c = com.example.myapplication.Connections.getInstance(context).getConnection(clientHandle);
+    Connection c = Connections.getInstance(context).getConnection(clientHandle);
     try {
-      c.getClient().connect(c.getConnectionOptions(), null, new com.example.myapplication.ActionListener(context, Action.CONNECT, clientHandle));
+      c.getClient().connect(c.getConnectionOptions(), null, new ActionListener(context, Action.CONNECT, clientHandle));
     }
     catch (MqttSecurityException e) {
       Log.e(this.getClass().getCanonicalName(), "Failed to reconnect the client with the handle " + clientHandle, e);
@@ -146,7 +134,7 @@ public class Listener implements OnMenuItemClickListener {
    */
   private void disconnect() {
 
-    com.example.myapplication.Connection c = com.example.myapplication.Connections.getInstance(context).getConnection(clientHandle);
+    Connection c = Connections.getInstance(context).getConnection(clientHandle);
 
     //if the client is not connected, process the disconnect
     if (!c.isConnected()) {
@@ -154,7 +142,7 @@ public class Listener implements OnMenuItemClickListener {
     }
 
     try {
-      c.getClient().disconnect(null, new com.example.myapplication.ActionListener(context, Action.DISCONNECT, clientHandle));
+      c.getClient().disconnect(null, new ActionListener(context, Action.DISCONNECT, clientHandle));
       c.changeConnectionStatus(ConnectionStatus.DISCONNECTING);
     }
     catch (MqttException e) {
@@ -176,7 +164,7 @@ public class Listener implements OnMenuItemClickListener {
 
     RadioGroup radio = (RadioGroup) connectionDetails.findViewById(R.id.qosSubRadio);
     int checked = radio.getCheckedRadioButtonId();
-    int qos = com.example.myapplication.ActivityConstants.defaultQos;
+    int qos = ActivityConstants.defaultQos;
 
     switch (checked) {
       case R.id.qos0 :
@@ -193,8 +181,8 @@ public class Listener implements OnMenuItemClickListener {
     try {
       String[] topics = new String[1];
       topics[0] = topic;
-      com.example.myapplication.Connections.getInstance(context).getConnection(clientHandle).getClient()
-          .subscribe(topic, qos, null, new com.example.myapplication.ActionListener(context, Action.SUBSCRIBE, clientHandle, topics));
+      Connections.getInstance(context).getConnection(clientHandle).getClient()
+              .subscribe(topic, qos, null, new ActionListener(context, Action.SUBSCRIBE, clientHandle, topics));
     }
     catch (MqttSecurityException e) {
       Log.e(this.getClass().getCanonicalName(), "Failed to subscribe to" + topic + " the client with the handle " + clientHandle, e);
@@ -212,18 +200,18 @@ public class Listener implements OnMenuItemClickListener {
   private void publish()
   {
     String topic = ((EditText) connectionDetails.findViewById(R.id.lastWillTopic))
-        .getText().toString();
+            .getText().toString();
 
     ((EditText) connectionDetails.findViewById(R.id.lastWillTopic)).getText().clear();
 
     String message = ((EditText) connectionDetails.findViewById(R.id.lastWill)).getText()
-        .toString();
+            .toString();
 
     ((EditText) connectionDetails.findViewById(R.id.lastWill)).getText().clear();
 
     RadioGroup radio = (RadioGroup) connectionDetails.findViewById(R.id.qosRadio);
     int checked = radio.getCheckedRadioButtonId();
-    int qos = com.example.myapplication.ActivityConstants.defaultQos;
+    int qos = ActivityConstants.defaultQos;
 
     switch (checked) {
       case R.id.qos0 :
@@ -238,15 +226,15 @@ public class Listener implements OnMenuItemClickListener {
     }
 
     boolean retained = ((CheckBox) connectionDetails.findViewById(R.id.retained))
-        .isChecked();
+            .isChecked();
 
     String[] args = new String[2];
     args[0] = message;
     args[1] = topic+";qos:"+qos+";retained:"+retained;
 
     try {
-      com.example.myapplication.Connections.getInstance(context).getConnection(clientHandle).getClient()
-          .publish(topic, message.getBytes(), qos, retained, null, new com.example.myapplication.ActionListener(context, Action.PUBLISH, clientHandle, args));
+      Connections.getInstance(context).getConnection(clientHandle).getClient()
+              .publish(topic, message.getBytes(), qos, retained, null, new ActionListener(context, Action.PUBLISH, clientHandle, args));
     }
     catch (MqttSecurityException e) {
       Log.e(this.getClass().getCanonicalName(), "Failed to publish a messged from the client with the handle " + clientHandle, e);
@@ -268,11 +256,11 @@ public class Listener implements OnMenuItemClickListener {
     //start a new activity to gather information for a new connection
     createConnection = new Intent();
     createConnection.setClassName(
-        clientConnections.getApplicationContext(),
-        "io.bytehala.eclipsemqtt.sample.NewConnectionActivity");
+            clientConnections.getApplicationContext(),
+            "com.example.myapplication.NewConnectionActivity");
 
     clientConnections.startActivityForResult(createConnection,
-            com.example.myapplication.ActivityConstants.connect);
+            ActivityConstants.connect);
   }
 
   /**
@@ -284,22 +272,22 @@ public class Listener implements OnMenuItemClickListener {
       InputStream logPropStream = context.getResources().openRawResource(R.raw.jsr47android);
       LogManager.getLogManager().readConfiguration(logPropStream);
       logging = true;
-         
-      HashMap<String, com.example.myapplication.Connection> connections = (HashMap<String, com.example.myapplication.Connection>) com.example.myapplication.Connections.getInstance(context).getConnections();
+
+      HashMap<String, Connection> connections = (HashMap<String,Connection>)Connections.getInstance(context).getConnections();
       if(!connections.isEmpty()){
-    	  Entry<String, com.example.myapplication.Connection> entry = connections.entrySet().iterator().next();
-        com.example.myapplication.Connection connection = (com.example.myapplication.Connection)entry.getValue();
-    	  connection.getClient().setTraceEnabled(true);
-    	  //change menu state.
-    	  clientConnections.invalidateOptionsMenu();
-    	  //Connections.getInstance(context).getConnection(clientHandle).getClient().setTraceEnabled(true);
+        Entry<String, Connection> entry = connections.entrySet().iterator().next();
+        Connection connection = (Connection)entry.getValue();
+        connection.getClient().setTraceEnabled(true);
+        //change menu state.
+        clientConnections.invalidateOptionsMenu();
+        //Connections.getInstance(context).getConnection(clientHandle).getClient().setTraceEnabled(true);
       }else{
-    	  Log.i("SampleListener","No connection to enable log in service");
+        Log.i("SampleListener","No connection to enable log in service");
       }
     }
     catch (IOException e) {
       Log.e("MqttAndroidClient",
-          "Error reading logging parameters", e);
+              "Error reading logging parameters", e);
     }
 
   }
@@ -310,18 +298,17 @@ public class Listener implements OnMenuItemClickListener {
   private void disablePahoLogging() {
     LogManager.getLogManager().reset();
     logging = false;
-    
-    HashMap<String, com.example.myapplication.Connection> connections = (HashMap<String, com.example.myapplication.Connection>) com.example.myapplication.Connections.getInstance(context).getConnections();
+
+    HashMap<String, Connection> connections = (HashMap<String,Connection>)Connections.getInstance(context).getConnections();
     if(!connections.isEmpty()){
-  	  Entry<String, com.example.myapplication.Connection> entry = connections.entrySet().iterator().next();
-      com.example.myapplication.Connection connection = (com.example.myapplication.Connection)entry.getValue();
-  	  connection.getClient().setTraceEnabled(false);
-  	  //change menu state.
-  	  clientConnections.invalidateOptionsMenu();
+      Entry<String, Connection> entry = connections.entrySet().iterator().next();
+      Connection connection = (Connection)entry.getValue();
+      connection.getClient().setTraceEnabled(false);
+      //change menu state.
+      clientConnections.invalidateOptionsMenu();
     }else{
-  	  Log.i("SampleListener","No connection to disable log in service");
+      Log.i("SampleListener","No connection to disable log in service");
     }
     clientConnections.invalidateOptionsMenu();
   }
-
 }

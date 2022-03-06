@@ -1,38 +1,18 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
- *
- * The Eclipse Public License is available at 
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.Toast;
-
-import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
-
 import com.example.myapplication.Connection.ConnectionStatus;
 
-/**
- * This Class handles receiving information from the
- * {@link MqttAndroidClient} and updating the {@link Connection} associated with
- * the action
- */
 class ActionListener implements IMqttActionListener {
 
   /**
    * Actions that can be performed Asynchronously <strong>and</strong> associated with a
    * {@link ActionListener} object
-   * 
+   *
    */
   enum Action {
     /** Connect Action **/
@@ -59,7 +39,7 @@ class ActionListener implements IMqttActionListener {
 
   /**
    * Creates a generic action listener for actions performed form any activity
-   * 
+   *
    * @param context
    *            The application context
    * @param action
@@ -71,7 +51,7 @@ class ActionListener implements IMqttActionListener {
    *            Used for as arguments for string formating
    */
   public ActionListener(Context context, Action action,
-      String clientHandle, String... additionalArgs) {
+                        String clientHandle, String... additionalArgs) {
     this.context = context;
     this.action = action;
     this.clientHandle = clientHandle;
@@ -80,7 +60,7 @@ class ActionListener implements IMqttActionListener {
 
   /**
    * The action associated with this listener has been successful.
-   * 
+   *
    * @param asyncActionToken
    *            This argument is not used
    */
@@ -112,9 +92,9 @@ class ActionListener implements IMqttActionListener {
 
     Connection c = Connections.getInstance(context).getConnection(clientHandle);
     @SuppressLint("StringFormatMatches") String actionTaken = context.getString(R.string.toast_pub_success,
-        (Object[]) additionalArgs);
+            (Object[]) additionalArgs);
     c.addAction(actionTaken);
-    com.example.myapplication.Notify.toast(context, actionTaken, Toast.LENGTH_SHORT);
+    Notify.toast(context, actionTaken, Toast.LENGTH_SHORT);
   }
 
   /**
@@ -125,9 +105,9 @@ class ActionListener implements IMqttActionListener {
   private void subscribe() {
     Connection c = Connections.getInstance(context).getConnection(clientHandle);
     String actionTaken = context.getString(R.string.toast_sub_success,
-        (Object[]) additionalArgs);
+            (Object[]) additionalArgs);
     c.addAction(actionTaken);
-    com.example.myapplication.Notify.toast(context, actionTaken, Toast.LENGTH_SHORT);
+    Notify.toast(context, actionTaken, Toast.LENGTH_SHORT);
 
   }
 
@@ -159,7 +139,7 @@ class ActionListener implements IMqttActionListener {
 
   /**
    * The action associated with the object was a failure
-   * 
+   *
    * @param token
    *            This argument is not used
    * @param exception
@@ -186,16 +166,16 @@ class ActionListener implements IMqttActionListener {
 
   /**
    * A publish action was unsuccessful, notify user and update client history
-   * 
+   *
    * @param exception
    *            This argument is not used
    */
   private void publish(Throwable exception) {
     Connection c = Connections.getInstance(context).getConnection(clientHandle);
     @SuppressLint("StringFormatMatches") String action = context.getString(R.string.toast_pub_failed,
-        (Object[]) additionalArgs);
+            (Object[]) additionalArgs);
     c.addAction(action);
-    com.example.myapplication.Notify.toast(context, action, Toast.LENGTH_SHORT);
+    Notify.toast(context, action, Toast.LENGTH_SHORT);
 
   }
 
@@ -206,9 +186,9 @@ class ActionListener implements IMqttActionListener {
   private void subscribe(Throwable exception) {
     Connection c = Connections.getInstance(context).getConnection(clientHandle);
     String action = context.getString(R.string.toast_sub_failed,
-        (Object[]) additionalArgs);
+            (Object[]) additionalArgs);
     c.addAction(action);
-    com.example.myapplication.Notify.toast(context, action, Toast.LENGTH_SHORT);
+    Notify.toast(context, action, Toast.LENGTH_SHORT);
 
   }
 
@@ -233,5 +213,4 @@ class ActionListener implements IMqttActionListener {
     c.addAction("Client failed to connect");
 
   }
-
 }

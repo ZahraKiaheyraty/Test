@@ -1,16 +1,10 @@
-/*******************************************************************************
- * Copyright (c) 1999, 2014 IBM Corp.
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution. 
- *
- * The Eclipse Public License is available at 
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at 
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- */
 package com.example.myapplication;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -19,15 +13,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * <code>Persistence</code> deals with interacting with the database to persist
- * {@link Connection} objects so created clients survive, the destruction of the 
+ * {@link Connection} objects so created clients survive, the destruction of the
  * singleton {@link Connections} object.
  *
  */
@@ -84,25 +72,25 @@ public class Persistence extends SQLiteOpenHelper implements BaseColumns {
   /** Create tables query **/
   private static final String SQL_CREATE_ENTRIES =
 
-      "CREATE TABLE " + TABLE_CONNECTIONS + " (" +
-          _ID + " INTEGER PRIMARY KEY," +
-          COLUMN_HOST + TEXT_TYPE + COMMA_SEP +
-          COLUMN_client_ID + TEXT_TYPE + COMMA_SEP +
-          COLUMN_port + INT_TYPE + COMMA_SEP +
-          COLUMN_ssl + INT_TYPE + COMMA_SEP +
-          COLUMN_TIME_OUT + INT_TYPE + COMMA_SEP +
-          COLUMN_KEEP_ALIVE + INT_TYPE + COMMA_SEP +
-          COLUMN_USER_NAME + TEXT_TYPE + COMMA_SEP +
-          COLUMN_PASSWORD + TEXT_TYPE + COMMA_SEP +
-          COLUMN_CLEAN_SESSION + INT_TYPE + COMMA_SEP +
-          COLUMN_TOPIC + TEXT_TYPE + COMMA_SEP +
-          COLUMN_MESSAGE + TEXT_TYPE + COMMA_SEP +
-          COLUMN_QOS + INT_TYPE + COMMA_SEP +
-          COLUMN_RETAINED + " INTEGER);";
+          "CREATE TABLE " + TABLE_CONNECTIONS + " (" +
+                  _ID + " INTEGER PRIMARY KEY," +
+                  COLUMN_HOST + TEXT_TYPE + COMMA_SEP +
+                  COLUMN_client_ID + TEXT_TYPE + COMMA_SEP +
+                  COLUMN_port + INT_TYPE + COMMA_SEP +
+                  COLUMN_ssl + INT_TYPE + COMMA_SEP +
+                  COLUMN_TIME_OUT + INT_TYPE + COMMA_SEP +
+                  COLUMN_KEEP_ALIVE + INT_TYPE + COMMA_SEP +
+                  COLUMN_USER_NAME + TEXT_TYPE + COMMA_SEP +
+                  COLUMN_PASSWORD + TEXT_TYPE + COMMA_SEP +
+                  COLUMN_CLEAN_SESSION + INT_TYPE + COMMA_SEP +
+                  COLUMN_TOPIC + TEXT_TYPE + COMMA_SEP +
+                  COLUMN_MESSAGE + TEXT_TYPE + COMMA_SEP +
+                  COLUMN_QOS + INT_TYPE + COMMA_SEP +
+                  COLUMN_RETAINED + " INTEGER);";
 
   /** Delete tables entry **/
   private static final String SQL_DELETE_ENTRIES =
-      "DROP TABLE IF EXISTS " + TABLE_CONNECTIONS;
+          "DROP TABLE IF EXISTS " + TABLE_CONNECTIONS;
 
   /**
    * Creates the persistence object passing it a context
@@ -141,16 +129,16 @@ public class Persistence extends SQLiteOpenHelper implements BaseColumns {
   /**
    * Persist a Connection to the database
    * @param connection the connection to persist
-   * @throws com.example.myapplication.PersistenceException If storing the data fails
+   * @throws PersistenceException If storing the data fails
    */
-  public void persistConnection(Connection connection) throws com.example.myapplication.PersistenceException {
+  public void persistConnection(Connection connection) throws PersistenceException {
 
     MqttConnectOptions conOpts = connection.getConnectionOptions();
     MqttMessage lastWill = conOpts.getWillMessage();
     SQLiteDatabase db = getWritableDatabase();
     ContentValues values = new ContentValues();
 
-    //put the column values object 
+    //put the column values object
 
     values.put(COLUMN_HOST, connection.getHostName());
     values.put(COLUMN_port, connection.getPort());
@@ -162,7 +150,7 @@ public class Persistence extends SQLiteOpenHelper implements BaseColumns {
     values.put(COLUMN_USER_NAME, conOpts.getUserName());
     values.put(COLUMN_TOPIC, conOpts.getWillDestination());
 
-    //uses "condition ? trueValue: falseValue" for in line converting of values 
+    //uses "condition ? trueValue: falseValue" for in line converting of values
     char[] password = conOpts.getPassword();
     values.put(COLUMN_CLEAN_SESSION, conOpts.isCleanSession() ? 1 : 0); //convert boolean to int and then put in values
     values.put(COLUMN_PASSWORD, password != null ? String.valueOf(password) : null); //convert char[] to String
@@ -179,10 +167,10 @@ public class Persistence extends SQLiteOpenHelper implements BaseColumns {
     //insert the values into the tables, returns the ID for the row
     long newRowId = db.insert(TABLE_CONNECTIONS, null, values);
 
-    db.close(); //close the db then deal with the result of the query 
+    db.close(); //close the db then deal with the result of the query
 
     if (newRowId == -1) {
-      throw new com.example.myapplication.PersistenceException("Failed to persist connection: " + connection.handle());
+      throw new PersistenceException("Failed to persist connection: " + connection.handle());
     }
     else { //Successfully persisted assigning persistecneID
       connection.assignPersistenceId(newRowId);
@@ -193,26 +181,26 @@ public class Persistence extends SQLiteOpenHelper implements BaseColumns {
    * Recreates connection objects based upon information stored in the database
    * @param context Context for creating {@link Connection} objects
    * @return list of connections that have been restored
-   * @throws com.example.myapplication.PersistenceException if restoring connections fails, this is thrown
+   * @throws PersistenceException if restoring connections fails, this is thrown
    */
-  public List<Connection> restoreConnections(Context context) throws com.example.myapplication.PersistenceException
+  public List<Connection> restoreConnections(Context context) throws PersistenceException
   {
     //columns to return
     String[] connectionColumns = {
-        COLUMN_HOST,
-        COLUMN_port,
-        COLUMN_client_ID,
-        COLUMN_ssl,
-        COLUMN_KEEP_ALIVE,
-        COLUMN_CLEAN_SESSION,
-        COLUMN_TIME_OUT,
-        COLUMN_USER_NAME,
-        COLUMN_PASSWORD,
-        COLUMN_TOPIC,
-        COLUMN_MESSAGE,
-        COLUMN_RETAINED,
-        COLUMN_QOS,
-        _ID
+            COLUMN_HOST,
+            COLUMN_port,
+            COLUMN_client_ID,
+            COLUMN_ssl,
+            COLUMN_KEEP_ALIVE,
+            COLUMN_CLEAN_SESSION,
+            COLUMN_TIME_OUT,
+            COLUMN_USER_NAME,
+            COLUMN_PASSWORD,
+            COLUMN_TOPIC,
+            COLUMN_MESSAGE,
+            COLUMN_RETAINED,
+            COLUMN_QOS,
+            _ID
 
     };
 
@@ -226,7 +214,7 @@ public class Persistence extends SQLiteOpenHelper implements BaseColumns {
     Connection connection = null;
     for (int i = 0; i < c.getCount(); i++) {
       if (!c.moveToNext()) { //move to the next item throw persistence exception, if it fails
-        throw new com.example.myapplication.PersistenceException("Failed restoring connection - count: " + c.getCount() + "loop iteration: " + i);
+        throw new PersistenceException("Failed restoring connection - count: " + c.getCount() + "loop iteration: " + i);
       }
       //get data from cursor
       Long id = c.getLong(c.getColumnIndexOrThrow(_ID));
