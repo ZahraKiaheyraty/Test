@@ -1,6 +1,10 @@
 package com.example.myapplication;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +26,19 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
+    TextView tempTextView;
+    Button button;
+    IntentFilter intentfilter;
+    float batteryTemp;
+    String currentBatterytemp="Current Battery temp :";
+    int batteryLevel;
+
+
+
+
+
+
+
     Random Number;
     Button btn;
     TextView temperature;
@@ -42,10 +59,14 @@ public class MainActivity extends AppCompatActivity {
         TextView textViewTemp = (TextView) findViewById(R.id.text_temperature);
         TextView textViewWind = (TextView) findViewById(R.id.text_wind_spe);
         TextView textViewWindDirection = (TextView) findViewById(R.id.text_wind_dir);
+
         wholeView = findViewById(R.id.text_up_time);
         updateHandler = new Handler();
         updateUptimes();
 
+        tempTextView = (TextView)findViewById(R.id.text_cpu_temperature);
+        intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        MainActivity.this.registerReceiver(broadcastreceiver,intentfilter);
 
         btn = (Button) findViewById(R.id.simpleSwitch);
         Speed = (TextView) findViewById(R.id.text_wind_spe);
@@ -110,6 +131,16 @@ public class MainActivity extends AppCompatActivity {
         t.start();
 
     }
+
+    private BroadcastReceiver broadcastreceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            batteryTemp = (float)(intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE,0))/10;
+            tempTextView.setText(batteryTemp +" "+ (char) 0x00B0 +"C");
+
+        }
+
+    };
 
     private void updateUptimes() {
         // Get the whole uptime
