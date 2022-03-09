@@ -90,4 +90,5 @@
     <string name="keepaliveHint">200</string>
     <string name="sslKeyLocaltion">file://</string>
     <string name="select">select</string>
+    <string name="msgPub">{"temperature":4}</string>
 </resources>

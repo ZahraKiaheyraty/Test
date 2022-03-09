@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/cloud_night_bg.xml" value="0.226" />
+        <entry key="app/src/main/res/drawable/ic_add.xml" value="0.183" />
         <entry key="app/src/main/res/layout/activity_advanced.xml" value="0.33229166666666665" />
         <entry key="app/src/main/res/layout/activity_connection_details.xml" value="0.33229166666666665" />
         <entry key="app/src/main/res/layout/activity_last_will.xml" value="0.30833333333333335" />

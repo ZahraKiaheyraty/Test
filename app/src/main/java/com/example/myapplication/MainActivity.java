@@ -6,20 +6,19 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.Handler;
+import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,12 +26,11 @@ public class MainActivity extends AppCompatActivity {
     Button btn;
     TextView temperature;
     TextView Speed;
+    private TextView wholeView;
+    private Handler updateHandler;
     int Rnumber;
     double Dwind;
     String SDirection[] = {"Wind direction: North", "Wind direction: West", "Wind direction: N/W", "Wind direction: South", "Wind direction: N/S"};
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,28 +42,21 @@ public class MainActivity extends AppCompatActivity {
         TextView textViewTemp = (TextView) findViewById(R.id.text_temperature);
         TextView textViewWind = (TextView) findViewById(R.id.text_wind_spe);
         TextView textViewWindDirection = (TextView) findViewById(R.id.text_wind_dir);
+        wholeView = findViewById(R.id.text_up_time);
+        updateHandler = new Handler();
+        updateUptimes();
+
 
         btn = (Button) findViewById(R.id.simpleSwitch);
         Speed = (TextView) findViewById(R.id.text_wind_spe);
         temperature = (TextView) findViewById(R.id.text_temperature);
 
-
-
-
-
-
-
-
         btn.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
 
-
-
             }
         });
-
 
         Thread t = new Thread() {
 
@@ -75,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 while (!isInterrupted()) {
 
                     try {
-                        Thread.sleep(1000);  //1000ms = 1 sec
+                        Thread.sleep(5000);  //1000ms = 1 sec
 
                         runOnUiThread(new Runnable() {
 
@@ -96,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     try {
-                        Thread.sleep(1000);  //1000ms = 1 sec
+                        Thread.sleep(5000);  //1000ms = 1 sec
 
                         runOnUiThread(new Runnable() {
 
@@ -120,7 +111,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void updateUptimes() {
+        // Get the whole uptime
+        long uptimeMillis = SystemClock.elapsedRealtime();
+        String wholeUptime = String.format(Locale.getDefault(),
+                "%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(uptimeMillis),
+                TimeUnit.MILLISECONDS.toMinutes(uptimeMillis)
+                        - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS
+                        .toHours(uptimeMillis)),
+                TimeUnit.MILLISECONDS.toSeconds(uptimeMillis)
+                        - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
+                        .toMinutes(uptimeMillis)));
+        wholeView.setText(wholeUptime);
 
+        // Get the uptime without deep sleep
+        long elapsedMillis = SystemClock.uptimeMillis();
+        // Call updateUptimes after one second
+        updateHandler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                updateUptimes();
+            }
+        }, 1000);
+    }
 //    Timer timeoutTimer;
 //    final Random myRandom = new Random();
 //    GenerateTask genTask = new GenerateTask();

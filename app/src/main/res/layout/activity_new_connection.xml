@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.22"
             android:ems="10"
-            android:text="0000" />
+            android:hint="@string/clientID"
+            android:text="paho724122623680161" />
     </LinearLayout>
 
     <LinearLayout
@@ -46,7 +47,7 @@
             android:layout_weight="0.22"
             android:ems="10"
             android:hint="@string/serverURIHint"
-            android:text="0000" />
+            android:text="45.149.79.49" />
     </LinearLayout>
 
     <LinearLayout
@@ -69,7 +70,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.22"
             android:ems="10"
-            android:text="0000" />
+            android:hint="@string/portHint"
+            android:text="1883" />
     </LinearLayout>
 
     <LinearLayout
@@ -90,6 +92,7 @@
             android:id="@+id/cleanSessionCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:contentDescription="@string/contentDescriptionCleanSession"
             android:text="@string/empty" />
     </LinearLayout>

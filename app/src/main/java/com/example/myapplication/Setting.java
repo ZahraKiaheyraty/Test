@@ -96,8 +96,7 @@ public class Setting extends AppCompatActivity {
                 .getConnections();
 
         if (connections != null) {
-            for (String s : connections.keySet())
-            {
+            for (String s : connections.keySet()) {
                 arrayAdapter.add(connections.get(s));
             }
         }
@@ -110,12 +109,10 @@ public class Setting extends AppCompatActivity {
         MenuItem.OnMenuItemClickListener menuItemClickListener = new Listener(this);
 
         //load the correct menu depending on the status of logging
-        if (Listener.logging)
-        {
+        if (Listener.logging) {
             getMenuInflater().inflate(R.menu.activity_connections_logging, menu);
             menu.findItem(R.id.endLogging).setOnMenuItemClickListener(menuItemClickListener);
-        }
-        else {
+        } else {
             getMenuInflater().inflate(R.menu.activity_connections, menu);
             menu.findItem(R.id.startLogging).setOnMenuItemClickListener(menuItemClickListener);
         }
@@ -126,8 +123,7 @@ public class Setting extends AppCompatActivity {
         return true;
     }
 
-    private void createAndConnect()
-    {
+    private void createAndConnect() {
         Intent createConnection;
 
         //start a new activity to gather information for a new connection
@@ -141,7 +137,7 @@ public class Setting extends AppCompatActivity {
     }
 
     /**
-     * @see ListActivity#onActivityResult(int,int,Intent)
+     * @see ListActivity#onActivityResult(int, int, Intent)
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -166,11 +162,6 @@ public class Setting extends AppCompatActivity {
         //Recover connections.
         Map<String, Connection> connections = Connections.getInstance(this).getConnections();
 
-//        //Register receivers again
-//        for (Connection connection : connections.values()){
-//            connection.getClient().registerResources(this);
-//            connection.getClient().setCallback(new MqttCallbackHandler(this, connection.getClient().getServerURI()+connection.getClient().getClientId()));
-//        }
     }
 
     @Override
@@ -178,7 +169,7 @@ public class Setting extends AppCompatActivity {
 
         Map<String, Connection> connections = Connections.getInstance(this).getConnections();
 
-        for (Connection connection : connections.values()){
+        for (Connection connection : connections.values()) {
             connection.registerChangeListener(changeListener);
             connection.getClient().unregisterResources();
         }
@@ -221,8 +212,7 @@ public class Setting extends AppCompatActivity {
             Log.e("SSLConnection", "Doing an SSL Connect");
             uri = "ssl://";
 
-        }
-        else {
+        } else {
             uri = "tcp://";
         }
 
@@ -231,10 +221,9 @@ public class Setting extends AppCompatActivity {
         MqttAndroidClient client;
         client = Connections.getInstance(this).createClient(this, uri, clientId);
 
-        if (ssl){
+        if (ssl) {
             try {
-                if(ssl_key != null && !ssl_key.equalsIgnoreCase(""))
-                {
+                if (ssl_key != null && !ssl_key.equalsIgnoreCase("")) {
                     FileInputStream key = new FileInputStream(ssl_key);
                     conOpt.setSocketFactory(client.getSSLSocketFactory(key,
                             "mqtttest"));
@@ -299,8 +288,7 @@ public class Setting extends AppCompatActivity {
             try {
                 conOpt.setWill(topic, message.getBytes(), qos.intValue(),
                         retained.booleanValue());
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.e(this.getClass().getCanonicalName(), "Exception Occured", e);
                 doConnect = false;
                 callback.onFailure(null, e);
@@ -314,30 +302,36 @@ public class Setting extends AppCompatActivity {
 
         connection.addConnectionOptions(conOpt);
         Connections.getInstance(this).addConnection(connection);
-        if (doConnect) {
-            try {
-                client.connect(conOpt, null, callback);
-            }
-            catch (MqttException e) {
-                Log.e(this.getClass().getCanonicalName(),
-                        "MqttException Occured", e);
-            }
-        }
+//        if (doConnect) {
+//            try {
+//                client.connect(conOpt, null, callback);
+//            }
+//            catch (MqttException e) {
+//                Log.e(this.getClass().getCanonicalName(),
+//                        "MqttException Occured", e);
+//            }
+//        }
+
 
     }
 
     /**
      * <code>LongClickItemListener</code> deals with enabling and disabling the contextual action bar and
      * processing the actions selected.
-     *
      */
     private class LongClickItemListener implements AdapterView.OnItemLongClickListener, ActionMode.Callback, DialogInterface.OnClickListener {
 
-        /** The index of the item selected, or -1 if an item is not selected **/
+        /**
+         * The index of the item selected, or -1 if an item is not selected
+         **/
         private int selected = -1;
-        /** The view of the item selected **/
+        /**
+         * The view of the item selected
+         **/
         private View selectedView = null;
-        /** The connection the view is representing **/
+        /**
+         * The connection the view is representing
+         **/
         private Connection connection = null;
 
         /* (non-Javadoc)
@@ -360,11 +354,11 @@ public class Setting extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             selectedView.setBackgroundColor(getResources().getColor(android.R.color.white));
             switch (item.getItemId()) {
-                case R.id.delete :
+                case R.id.delete:
                     delete();
                     mode.finish();
                     return true;
-                default :
+                default:
                     return false;
             }
         }
@@ -401,8 +395,7 @@ public class Setting extends AppCompatActivity {
         /**
          * Deletes the connection, disconnecting if required.
          */
-        private void delete()
-        {
+        private void delete() {
             connection = arrayAdapter.getItem(selected);
             if (connection.isConnectedOrConnecting()) {
 
@@ -419,8 +412,7 @@ public class Setting extends AppCompatActivity {
                         })
                         .setPositiveButton(R.string.continueBtn, this)
                         .show();
-            }
-            else {
+            } else {
                 arrayAdapter.remove(connection);
                 Connections.getInstance(clientConnections).removeConnection(connection);
             }
@@ -432,8 +424,7 @@ public class Setting extends AppCompatActivity {
             //user pressed continue disconnect client and delete
             try {
                 connection.getClient().disconnect();
-            }
-            catch (MqttException e) {
+            } catch (MqttException e) {
                 e.printStackTrace();
             }
             arrayAdapter.remove(connection);
@@ -445,8 +436,6 @@ public class Setting extends AppCompatActivity {
 
     /**
      * This class ensures that the user interface is updated as the Connection objects change their states
-     *
-     *
      */
     private class ChangeListener implements PropertyChangeListener {
 
